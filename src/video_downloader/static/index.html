@@ -5,9 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
     <title>video-downloader</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap">
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js" defer></script>
   </head>
   <body>
-    <h1>video-downloader</h1>
-    <p>Le serveur tourne. L'interface arrive.</p>
+    <!-- Not `hidden`: some browsers refuse to draw symbols from a display:none sprite. -->
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+      <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></symbol>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5l11 7-11 7z"/></symbol>
+      <symbol id="icon-check" viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></symbol>
+      <symbol id="icon-warning" viewBox="0 0 24 24"><path d="M12 4l9 16H3zM12 10v4M12 17v.5"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="icon-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></symbol>
+      <symbol id="icon-spinner" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9"/></symbol>
+      <symbol id="icon-inbox" viewBox="0 0 24 24"><path d="M4 14v5h16v-5M12 4v10M8 10l4 4 4-4"/></symbol>
+    </svg>
+
+    <header class="topbar">
+      <svg class="icon topbar-logo" aria-hidden="true"><use href="#icon-download"/></svg>
+      <span class="wordmark">video-downloader</span>
+    </header>
+
+    <main>
+      <section class="intro">
+        <h1>Colle un lien, récupère la vidéo.</h1>
+        <form id="url-form" class="url-form">
+          <label for="url">Lien de la vidéo</label>
+          <div class="url-row">
+            <input id="url" type="url" required placeholder="https://…" autocomplete="off" aria-describedby="url-hint url-error">
+            <button id="analyse" type="submit" class="button button-strong" aria-label="Analyser">
+              <svg class="icon icon-idle" aria-hidden="true"><use href="#icon-arrow"/></svg>
+              <svg class="icon icon-busy spin" aria-hidden="true"><use href="#icon-spinner"/></svg>
+              <span class="button-label">Analyser</span>
+            </button>
+          </div>
+          <p id="url-hint" class="hint">YouTube, X et les autres sites pris en charge par yt-dlp.</p>
+          <p id="url-error" class="error" role="alert" hidden>
+            <svg class="icon" aria-hidden="true"><use href="#icon-warning"/></svg>
+            <span></span>
+          </p>
+        </form>
+      </section>
+
+      <section id="skeleton" class="card skeleton" aria-hidden="true" hidden>
+        <div class="skeleton-thumb"></div>
+        <div class="skeleton-lines">
+          <div style="width: 64px"></div>
+          <div style="width: 80%"></div>
+          <div style="width: 45%"></div>
+        </div>
+      </section>
+
+      <section id="preview" class="card" aria-label="Aperçu de la vidéo" hidden>
+        <div class="preview-head">
+          <div class="thumb">
+            <svg class="icon" aria-hidden="true"><use href="#icon-play"/></svg>
+            <img id="preview-thumb" alt="" referrerpolicy="no-referrer" hidden>
+          </div>
+          <div class="preview-text">
+            <span id="preview-source" class="chip"></span>
+            <h2 id="preview-title"></h2>
+            <span id="preview-meta" class="muted"></span>
+          </div>
+        </div>
+        <div class="presets-block">
+          <span id="presets-label" class="field-label">Format</span>
+          <div id="presets" class="presets" role="group" aria-labelledby="presets-label"></div>
+        </div>
+        <button id="download" type="button" class="button button-accent">
+          <svg class="icon" aria-hidden="true"><use href="#icon-download"/></svg>
+          <span>Télécharger</span>
+        </button>
+      </section>
+
+      <section class="downloads">
+        <h2>Téléchargements</h2>
+        <p id="notice" class="error" role="status" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#icon-warning"/></svg>
+          <span></span>
+        </p>
+        <ul id="jobs" class="jobs"></ul>
+        <div id="empty" class="empty">
+          <svg class="icon" aria-hidden="true"><use href="#icon-inbox"/></svg>
+          <strong>Rien pour l'instant</strong>
+          <span class="muted">Les vidéos téléchargées apparaîtront ici.</span>
+        </div>
+      </section>
+    </main>
+
+    <footer id="footer" class="footer"></footer>
+
+    <template id="job-template">
+      <li class="job">
+        <div class="job-main">
+          <div class="job-head">
+            <span class="job-title"></span>
+            <span class="job-meta muted"></span>
+          </div>
+          <div class="bar" role="progressbar" aria-label="Progression" aria-valuemin="0" aria-valuemax="100" hidden>
+            <div class="bar-fill"></div>
+          </div>
+          <span class="job-status"><span class="job-status-text"></span></span>
+        </div>
+        <div class="job-actions"></div>
+      </li>
+    </template>
   </body>
 </html>
