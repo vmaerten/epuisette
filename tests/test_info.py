@@ -24,6 +24,7 @@ YOUTUBE_4K = [
 # X serves HLS variants with unknown codecs next to a muxed MP4.
 X_720P = [
     {"vcodec": None, "acodec": None, "width": 320, "height": 180},
+    {"vcodec": None, "acodec": None, "width": 640, "height": 360},
     {"vcodec": None, "acodec": None, "width": 1280, "height": 720},
     {"vcodec": "avc1.4d0020", "acodec": "mp4a.40.2", "width": 1280, "height": 720},
 ]
@@ -37,12 +38,22 @@ VERTICAL = [
 @pytest.mark.parametrize(
     ("formats", "expected"),
     [
-        (YOUTUBE_4K, [("best", 2160), ("1080p", 1080), ("720p", 720), ("audio", None)]),
-        (X_720P, [("best", 720), ("audio", None)]),
+        (
+            YOUTUBE_4K,
+            [
+                ("best", 2160),
+                ("1440p", 1440),
+                ("1080p", 1080),
+                ("720p", 720),
+                ("360p", 360),
+                ("audio", None),
+            ],
+        ),
+        (X_720P, [("best", 720), ("360p", 360), ("audio", None)]),
         (VERTICAL, [("best", 1080), ("720p", 720), ("audio", None)]),
         ([STORYBOARD, AUDIO_ONLY], [("audio", None)]),
     ],
-    ids=["caps below the best", "no duplicate of the best", "vertical video", "audio only"],
+    ids=["named after the result", "no duplicate of the best", "vertical video", "audio only"],
 )
 def test_build_presets(formats, expected):
     presets = info.build_presets(formats)
@@ -96,7 +107,11 @@ def test_info_returns_metadata_and_presets(monkeypatch):
         "duration": 635,
         "uploader": "Blender",
         "extractor": "Youtube",
-        "presets": [{"id": "best", "resolution": 720}, {"id": "audio", "resolution": None}],
+        "presets": [
+            {"id": "best", "resolution": 720},
+            {"id": "360p", "resolution": 360},
+            {"id": "audio", "resolution": None},
+        ],
     }
 
 

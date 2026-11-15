@@ -1,3 +1,4 @@
+import re
 from typing import Any
 
 import yt_dlp
@@ -15,7 +16,9 @@ YDL_OPTS = {
     "socket_timeout": 15,
 }
 
-RESOLUTION_CAPS = (1080, 720)
+# One preset per step of the usual ladder, each named after the resolution it really gives.
+RESOLUTION_CAPS = (1440, 1080, 720, 480, 360)
+PRESET_ID = re.compile(r"best|audio|\d{3,4}p")
 
 
 class Preset(BaseModel):
@@ -53,7 +56,7 @@ def build_presets(formats: list[dict[str, Any]]) -> list[Preset]:
         for cap in RESOLUTION_CAPS:
             capped = max((r for r in resolutions if r <= cap), default=None)
             if capped and capped not in offered:
-                presets.append(Preset(id=f"{cap}p", resolution=capped))
+                presets.append(Preset(id=f"{capped}p", resolution=capped))
                 offered.add(capped)
     if has_audio:
         presets.append(Preset(id="audio", resolution=None))
@@ -74,6 +77,11 @@ def require_web_url(url: str) -> None:
     # yt-dlp also accepts search prefixes and bare words; only real links are allowed here.
     if not url.startswith(("http://", "https://")):
         raise ApiError(422, "unsupported_url", "Not a web address")
+
+
+def require_preset(preset: str) -> None:
+    if not PRESET_ID.fullmatch(preset):
+        raise ApiError(422, "invalid_preset", "Unknown format")
 
 
 def fetch_info(url: str) -> VideoInfo:
