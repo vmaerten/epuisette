@@ -8,8 +8,8 @@ cask "epuisette" do
   homepage "https://github.com/vmaerten/epuisette"
 
   depends_on arch: :arm64
-  depends_on macos: :monterey
   depends_on formula: ["yt-dlp", "ffmpeg", "deno"]
+  depends_on macos: :monterey
 
   app "Épuisette.app"
 
