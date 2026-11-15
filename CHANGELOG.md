@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### ✨ Features
+
+- Open **À propos d'Épuisette** from the app menu or the footer: who makes the app, its version, and links to sponsor it on GitHub, buy its author a coffee, read the code or report a problem. **Soutenir Épuisette…** in the app menu goes straight to GitHub Sponsors. ([#33](https://github.com/vmaerten/epuisette/pull/33))
+
 ## 0.1.0
 
 ### ✨ Features

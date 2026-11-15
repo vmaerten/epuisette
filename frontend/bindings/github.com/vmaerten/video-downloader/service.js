@@ -60,12 +60,28 @@ export function ListDownloads() {
 }
 
 /**
+ * OpenLink opens one of the app's known links, such as "sponsors", in the browser.
+ * @param {string} name
+ * @returns {$CancellablePromise<void>}
+ */
+export function OpenLink(name) {
+    return $Call.ByID(2268685805, name);
+}
+
+/**
  * RevealDownload selects the downloaded file in the Finder.
  * @param {string} id
  * @returns {$CancellablePromise<void>}
  */
 export function RevealDownload(id) {
     return $Call.ByID(3571838544, id);
+}
+
+/**
+ * @returns {$CancellablePromise<void>}
+ */
+export function ShowAbout() {
+    return $Call.ByID(3460432417);
 }
 
 /**

@@ -17,6 +17,8 @@
   --disabled: #e9ebef;
   --disabled-strong: #555b66;
   --on-disabled-strong: #ffffff;
+  --sponsor: #bf3989;
+  --on-sponsor: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,6 +40,8 @@
     --disabled: #22262b;
     --disabled-strong: #3a4048;
     --on-disabled-strong: #c9ced6;
+    --sponsor: #db61a2;
+    --on-sponsor: #0f1113;
   }
 }
 
@@ -547,9 +551,126 @@ input[type="url"][aria-invalid="true"] {
 
 .footer {
   padding: 20px 24px 28px;
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 4px 10px;
   font-size: 13px;
   color: var(--muted);
+}
+
+/* Hidden as a whole with the yt-dlp version, its separator spaced like the others. */
+.footer-part {
+  display: inline-flex;
+  gap: 10px;
+}
+
+/* A button that reads as a link: it opens a window or the browser, never a page here. */
+.link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link-sponsor {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--sponsor);
+}
+
+.link-sponsor .icon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
+  stroke: none;
+}
+
+.about {
+  min-height: 100vh;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.about-icon {
+  width: 112px;
+  height: 112px;
+}
+
+.about-name {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.about-name h1 {
+  font-size: 24px;
+}
+
+.about-name .muted,
+.about-pitch,
+.about-links,
+.about-who {
+  font-size: 13px;
+}
+
+.about-who {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: -8px;
+}
+
+.about-support {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-support .button {
+  height: 44px;
+  font-weight: 600;
+}
+
+.button-sponsor {
+  border-color: var(--sponsor);
+  background: var(--sponsor);
+  color: var(--on-sponsor);
+}
+
+.button-coffee {
+  border-color: #e6c700;
+  background: #ffdd00;
+  color: #15171a;
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+}
+
+.about-links .link {
+  font-weight: 400;
+}
+
+.about-credits {
+  margin-top: auto;
+  font-size: 12px;
 }
 
 @media (max-width: 560px) {

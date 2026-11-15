@@ -318,8 +318,12 @@ async function onJobAction(event) {
 }
 
 async function loadConfig() {
-  const { ytdlpVersion, missingTools } = await Service.Config();
-  if (ytdlpVersion) $("footer").textContent = `yt-dlp ${ytdlpVersion}`;
+  const { version, ytdlpVersion, missingTools } = await Service.Config();
+  $("app-version").textContent = version;
+  if (ytdlpVersion) {
+    $("ytdlp-version").lastElementChild.textContent = `yt-dlp ${ytdlpVersion}`;
+    $("ytdlp-version").hidden = false;
+  }
   if (missingTools.length > 0) {
     const pronoun = missingTools.length > 1 ? "les" : "le";
     showMessage(
@@ -338,6 +342,10 @@ $("url-form").addEventListener("submit", analyse);
 $("presets").addEventListener("click", selectPreset);
 $("download").addEventListener("click", startDownload);
 $("jobs").addEventListener("click", onJobAction);
+$("about-link").addEventListener("click", () => Service.ShowAbout());
+document.querySelector(".footer [data-link]").addEventListener("click", (event) => {
+  Service.OpenLink(event.currentTarget.dataset.link);
+});
 document.addEventListener("visibilitychange", () => {
   if (!document.hidden) refreshJobs();
 });

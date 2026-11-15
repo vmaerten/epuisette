@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <title>À propos d'Épuisette</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="about.js"></script>
+  </head>
+  <body class="about">
+    <img class="about-icon" src="appicon.png" alt="Icône d'Épuisette">
+    <div class="about-name">
+      <h1>Épuisette</h1>
+      <span class="muted" id="version"></span>
+    </div>
+
+    <p>Faite avec soin par <strong>Valentin Maerten</strong></p>
+    <p class="about-who">
+      <button type="button" class="link" data-link="website">vmaerten.fr</button>
+      <span aria-hidden="true">·</span>
+      <button type="button" class="link" data-link="github">@vmaerten sur GitHub</button>
+    </p>
+    <p class="muted about-pitch">Épuisette est gratuite et open source. Si elle te rend service, tu peux soutenir son développement.</p>
+
+    <div class="about-support">
+      <button type="button" class="button button-sponsor" data-link="sponsors">
+        <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>
+        <span>Sponsoriser sur GitHub</span>
+      </button>
+      <button type="button" class="button button-coffee" data-link="coffee">
+        <svg class="icon" aria-hidden="true" viewBox="0 0 24 24"><path d="M5 9h11v5a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5zM16 10h1.5a2.5 2.5 0 0 1 0 5H16M9 3.5c0 1-1 1.5-1 2.5s1 1.5 1 2.5M12.5 3.5c0 1-1 1.5-1 2.5s1 1.5 1 2.5"/></svg>
+        <span>M'offrir un café</span>
+      </button>
+    </div>
+
+    <nav class="about-links" aria-label="Liens">
+      <button type="button" class="link" data-link="code">Code source</button>
+      <button type="button" class="link" data-link="issues">Signaler un problème</button>
+      <button type="button" class="link" data-link="changes">Nouveautés</button>
+    </nav>
+
+    <p class="muted about-credits">Propulsé par yt-dlp, ffmpeg et deno.</p>
+  </body>
+</html>

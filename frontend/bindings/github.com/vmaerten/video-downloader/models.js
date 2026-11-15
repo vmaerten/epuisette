@@ -12,6 +12,13 @@ export class Config {
      * @param {Partial<Config>} [$$source = {}] - The source object to create the Config.
      */
     constructor($$source = {}) {
+        if (!("version" in $$source)) {
+            /**
+             * @member
+             * @type {string}
+             */
+            this["version"] = "";
+        }
         if (!("ytdlpVersion" in $$source)) {
             /**
              * Empty when yt-dlp is missing or fails to start.
@@ -37,10 +44,10 @@ export class Config {
      * @returns {Config}
      */
     static createFrom($$source = {}) {
-        const $$createField1_0 = $$createType0;
+        const $$createField2_0 = $$createType0;
         let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
         if ("missingTools" in $$parsedSource) {
-            $$parsedSource["missingTools"] = $$createField1_0($$parsedSource["missingTools"]);
+            $$parsedSource["missingTools"] = $$createField2_0($$parsedSource["missingTools"]);
         }
         return new Config(/** @type {Partial<Config>} */($$parsedSource));
     }

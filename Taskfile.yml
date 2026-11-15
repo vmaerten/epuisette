@@ -19,18 +19,22 @@ tasks:
       - wails3 generate bindings -clean -b -noevents -d frontend/bindings
 
   build:
-    desc: Build the production binary
+    desc: Build the production binary (optional VERSION)
+    vars:
+      VERSION: '{{.VERSION | default "dev"}}'
     env:
       CGO_ENABLED: '1'
       CGO_CFLAGS: -mmacosx-version-min=12.0
       CGO_LDFLAGS: -mmacosx-version-min=12.0
       MACOSX_DEPLOYMENT_TARGET: '12.0'
     cmds:
-      - go build -tags production -trimpath -buildvcs=false -ldflags="-w -s" -o {{.BIN_DIR}}/{{.APP_NAME}} .
+      - go build -tags production -trimpath -buildvcs=false -ldflags="-w -s -X main.version={{.VERSION}}" -o {{.BIN_DIR}}/{{.APP_NAME}} .
 
   package:
     desc: Assemble and ad-hoc sign the .app bundle in bin/ (optional VERSION)
-    deps: [build]
+    deps:
+      - task: build
+        vars: { VERSION: '{{.VERSION}}' }
     vars:
       VERSION: '{{.VERSION | default "0.0.0"}}'
     cmds:
