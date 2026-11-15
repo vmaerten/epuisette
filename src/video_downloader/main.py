@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Literal
 
+import yt_dlp.version
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 STATIC_DIR = Path(__file__).parent / "static"
 DOWNLOADS_DIR = Path(os.environ.get("DOWNLOADS_DIR", "downloads"))
-MAX_AGE_SECONDS = float(os.environ.get("DOWNLOADS_MAX_AGE_DAYS", "7")) * 86400
+MAX_AGE_DAYS = float(os.environ.get("DOWNLOADS_MAX_AGE_DAYS", "7"))
 PURGE_INTERVAL_SECONDS = 3600
 
 jobs = JobStore(DOWNLOADS_DIR, download)
@@ -28,7 +29,7 @@ jobs = JobStore(DOWNLOADS_DIR, download)
 async def _purge_periodically() -> None:
     while True:
         try:
-            await asyncio.to_thread(jobs.purge, MAX_AGE_SECONDS)
+            await asyncio.to_thread(jobs.purge, MAX_AGE_DAYS * 86400)
         except Exception:
             # One failed pass must not end the loop for the life of the server.
             logger.exception("Purging old downloads failed")
@@ -45,6 +46,11 @@ async def lifespan(_: FastAPI):
 
 
 app = FastAPI(title="video-downloader", lifespan=lifespan)
+
+
+class Config(BaseModel):
+    ytdlp_version: str
+    max_age_days: float
 
 
 class InfoRequest(BaseModel):
@@ -90,6 +96,11 @@ def _find_job(job_id: str) -> Job:
 @app.get("/healthz")
 def healthz() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/api/config")
+def config() -> Config:
+    return Config(ytdlp_version=yt_dlp.version.__version__, max_age_days=MAX_AGE_DAYS)
 
 
 # Sync on purpose: yt-dlp blocks, and FastAPI runs sync endpoints in a thread pool.
