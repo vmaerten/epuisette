@@ -317,12 +317,15 @@ async function onJobAction(event) {
   await refreshJobs();
 }
 
-async function loadFooter() {
-  try {
-    const { ytdlpVersion } = await Service.Config();
-    $("footer").textContent = `yt-dlp ${ytdlpVersion}`;
-  } catch {
-    // The footer is informative only: without it the page works the same.
+async function loadConfig() {
+  const { ytdlpVersion, missingTools } = await Service.Config();
+  if (ytdlpVersion) $("footer").textContent = `yt-dlp ${ytdlpVersion}`;
+  if (missingTools.length > 0) {
+    const pronoun = missingTools.length > 1 ? "les" : "le";
+    showMessage(
+      $("tools-banner"),
+      `Il manque ${missingTools.join(", ")}. Installe-${pronoun} avec « brew install ${missingTools.join(" ")} », puis relance l'app.`,
+    );
   }
 }
 
@@ -339,5 +342,5 @@ document.addEventListener("visibilitychange", () => {
   if (!document.hidden) refreshJobs();
 });
 
-loadFooter();
+loadConfig();
 poll();

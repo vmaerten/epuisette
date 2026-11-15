@@ -539,6 +539,12 @@ input[type="url"][aria-invalid="true"] {
   font-weight: 600;
 }
 
+.banner {
+  padding: 12px 16px;
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+}
+
 .footer {
   padding: 20px 24px 28px;
   text-align: center;
