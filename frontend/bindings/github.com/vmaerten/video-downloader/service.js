@@ -13,6 +13,9 @@ import { Call as $Call, CancellablePromise as $CancellablePromise, Create as $Cr
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
+import * as jobs$0 from "./internal/jobs/models.js";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore: Unused imports
 import * as ytdlp$0 from "./internal/ytdlp/models.js";
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,6 +32,15 @@ export function Config() {
 }
 
 /**
+ * DeleteDownload cancels a download, or forgets a finished one without touching its file.
+ * @param {string} id
+ * @returns {$CancellablePromise<void>}
+ */
+export function DeleteDownload(id) {
+    return $Call.ByID(1528526442, id);
+}
+
+/**
  * @param {string} url
  * @returns {$CancellablePromise<ytdlp$0.VideoInfo>}
  */
@@ -38,6 +50,37 @@ export function Info(url) {
     }));
 }
 
+/**
+ * @returns {$CancellablePromise<jobs$0.Job[]>}
+ */
+export function ListDownloads() {
+    return $Call.ByID(1799537450).then(/** @type {($result: any) => any} */(($result) => {
+        return $$createType3($result);
+    }));
+}
+
+/**
+ * RevealDownload selects the downloaded file in the Finder.
+ * @param {string} id
+ * @returns {$CancellablePromise<void>}
+ */
+export function RevealDownload(id) {
+    return $Call.ByID(3571838544, id);
+}
+
+/**
+ * @param {string} url
+ * @param {string} preset
+ * @returns {$CancellablePromise<jobs$0.Job>}
+ */
+export function StartDownload(url, preset) {
+    return $Call.ByID(217903419, url, preset).then(/** @type {($result: any) => any} */(($result) => {
+        return $$createType2($result);
+    }));
+}
+
 // Private type creation functions
 const $$createType0 = $models.Config.createFrom;
 const $$createType1 = ytdlp$0.VideoInfo.createFrom;
+const $$createType2 = jobs$0.Job.createFrom;
+const $$createType3 = $Create.Array($$createType2);

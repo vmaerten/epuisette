@@ -20,33 +20,12 @@ const decimal = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 });
 // The video being previewed: { url, title, preset }.
 let preview = null;
 const rows = new Map();
-// The API only learns a title once the download starts; this covers the queued state.
+// A job only learns its title once the download starts; this covers the queued state.
 const titles = new Map();
-// Downloads started from this page: each one is saved to the device once, when it finishes.
-const pendingSaves = new Set();
 
-class ApiError extends Error {
-  constructor(code) {
-    super(code);
-    this.code = code;
-  }
-}
-
-async function api(method, path, body) {
-  const response = await fetch(path, {
-    method,
-    headers: body ? { "content-type": "application/json" } : {},
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  if (response.status === 204) return null;
-  const data = await response.json();
-  if (!response.ok) throw new ApiError(data.code);
-  return data;
-}
-
-// Go errors arrive with their JSON form in `cause`; the old HTTP calls set `code`.
+// Go errors arrive with their JSON form in `cause`.
 function messageFor(error) {
-  return ERROR_MESSAGES[error.cause?.code ?? error.code] ?? FALLBACK_ERROR;
+  return ERROR_MESSAGES[error.cause?.code] ?? FALLBACK_ERROR;
 }
 
 function formatBytes(bytes) {
@@ -188,9 +167,8 @@ async function startDownload() {
   const { url, title, preset } = preview;
   $("download").disabled = true;
   try {
-    const job = await api("POST", "/api/downloads", { url, preset });
+    const job = await Service.StartDownload(url, preset);
     titles.set(job.id, title);
-    pendingSaves.add(job.id);
     preview = null;
     $("preview").hidden = true;
     $("url").value = "";
@@ -242,14 +220,10 @@ function actionButton(action, label, iconName, extraClass) {
 }
 
 function actionsFor(job) {
-  const remove = actionButton("delete", "Supprimer", "trash", "button-icon");
+  // Removing a finished row leaves its file in the Downloads folder.
+  const remove = actionButton("delete", "Retirer de la liste", "trash", "button-icon");
   if (job.status === "done") {
-    const save = document.createElement("a");
-    save.className = "button button-accent";
-    save.href = `/api/downloads/${job.id}/file`;
-    save.download = "";
-    save.textContent = "Enregistrer";
-    return [save, remove];
+    return [actionButton("reveal", "Afficher dans le Finder", null, "button-accent"), remove];
   }
   if (job.status === "failed") {
     return [actionButton("retry", "Réessayer", null, ""), remove];
@@ -272,7 +246,7 @@ function buildRow(job) {
 
 function updateRow(row, job) {
   const percent = job.status === "merging" ? 100 : (job.percent ?? 0);
-  row.querySelector(".job-title").textContent = job.title ?? titles.get(job.id) ?? job.url;
+  row.querySelector(".job-title").textContent = job.title || titles.get(job.id) || job.url;
   row.querySelector(".job-meta").textContent = [
     extractorName(job.extractor),
     presetName(job.preset),
@@ -299,26 +273,22 @@ function renderJobs(jobs) {
       row = fresh;
     }
     updateRow(row, job);
-    if (job.status === "done" && pendingSaves.delete(job.id)) {
-      row.querySelector("a[download]").click();
-    }
   }
   for (const [id, row] of rows) {
     if (seen.has(id)) continue;
     row.remove();
     rows.delete(id);
     titles.delete(id);
-    pendingSaves.delete(id);
   }
   $("empty").hidden = jobs.length > 0;
 }
 
 async function refreshJobs() {
   try {
-    renderJobs(await api("GET", "/api/downloads"));
+    renderJobs(await Service.ListDownloads());
     showMessage($("notice"), null);
   } catch {
-    showMessage($("notice"), "Serveur injoignable, nouvel essai en cours…");
+    showMessage($("notice"), "La liste des téléchargements est illisible, nouvel essai en cours…");
   }
 }
 
@@ -328,20 +298,21 @@ async function onJobAction(event) {
   const row = button.closest(".job");
   button.disabled = true;
   try {
-    if (button.dataset.action === "retry") {
-      const { url, preset } = row.dataset;
-      const job = await api("POST", "/api/downloads", { url, preset });
-      titles.set(job.id, row.querySelector(".job-title").textContent);
-      pendingSaves.add(job.id);
-    }
-    await api("DELETE", `/api/downloads/${row.dataset.id}`);
-  } catch (error) {
-    // Already gone on the server is what we wanted.
-    if (error.code !== "not_found") {
-      showMessage($("notice"), "L'action a échoué. Réessaie dans un instant.");
+    if (button.dataset.action === "reveal") {
+      await Service.RevealDownload(row.dataset.id);
       button.disabled = false;
       return;
     }
+    if (button.dataset.action === "retry") {
+      const { url, preset } = row.dataset;
+      const job = await Service.StartDownload(url, preset);
+      titles.set(job.id, row.querySelector(".job-title").textContent);
+    }
+    await Service.DeleteDownload(row.dataset.id);
+  } catch {
+    showMessage($("notice"), "L'action a échoué. Réessaie dans un instant.");
+    button.disabled = false;
+    return;
   }
   await refreshJobs();
 }
