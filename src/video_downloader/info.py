@@ -70,10 +70,14 @@ def to_api_error(error: DownloadError) -> ApiError:
     return ApiError(502, "extraction_failed", str(error).removeprefix("ERROR: "))
 
 
-def fetch_info(url: str) -> VideoInfo:
+def require_web_url(url: str) -> None:
     # yt-dlp also accepts search prefixes and bare words; only real links are allowed here.
     if not url.startswith(("http://", "https://")):
         raise ApiError(422, "unsupported_url", "Not a web address")
+
+
+def fetch_info(url: str) -> VideoInfo:
+    require_web_url(url)
 
     try:
         with yt_dlp.YoutubeDL(YDL_OPTS) as ydl:
