@@ -1,6 +1,8 @@
 import logging
+import re
 import shutil
 import threading
+import time
 import uuid
 from collections.abc import Callable
 from concurrent.futures import Future, ThreadPoolExecutor
@@ -11,6 +13,10 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 MAX_CONCURRENT_DOWNLOADS = 2
+
+# The purge only ever removes directories named like a job id, so pointing the
+# downloads directory at a folder that holds other things cannot wipe them.
+JOB_ID = re.compile(r"[0-9a-f]{32}")
 
 
 class JobStatus(StrEnum):
@@ -43,6 +49,7 @@ class Job:
     size: int | None = None
     error: str | None = None
     file: Path | None = None
+    finished_at: float | None = None
     cancelled: threading.Event = field(default_factory=threading.Event)
     future: Future | None = None
 
@@ -89,6 +96,26 @@ class JobStore:
                 self._remove_files(job)
         return True
 
+    def purge(self, max_age: float, now: float | None = None) -> None:
+        """Remove finished jobs, and directories left by a previous run, older than `max_age`."""
+        cutoff = (now or time.time()) - max_age
+        with self._lock:
+            finished = [job for job in self._jobs.values() if job.finished_at]
+            expired = [job.id for job in finished if job.finished_at < cutoff]
+        for job_id in expired:
+            self.delete(job_id)
+
+        if not self._directory.is_dir():
+            return
+        with self._lock:
+            known = set(self._jobs)
+        for entry in self._directory.iterdir():
+            is_job_directory = JOB_ID.fullmatch(entry.name) and entry.is_dir()
+            if entry.name in known or entry.is_symlink() or not is_job_directory:
+                continue
+            if entry.stat().st_mtime < cutoff:
+                shutil.rmtree(entry, ignore_errors=True)
+
     def close(self) -> None:
         with self._lock:
             running = list(self._jobs.values())
@@ -102,8 +129,13 @@ class JobStore:
         try:
             if not job.cancelled.is_set():
                 job.status = JobStatus.DOWNLOADING
-                job.file = self._download(job, self._directory / job.id)
-                job.size = job.file.stat().st_size
+                directory = self._directory / job.id
+                file = self._download(job, directory)
+                # The name comes from the video's title: never serve a file from elsewhere.
+                if not file.resolve().is_relative_to(directory.resolve()):
+                    raise RuntimeError(f"Download landed outside its directory: {file}")
+                job.file = file
+                job.size = file.stat().st_size
         except JobCancelled:
             pass
         except DownloadFailed as failure:
@@ -121,6 +153,7 @@ class JobStore:
             else:
                 job.status, job.percent = JobStatus.DONE, 100.0
             job.speed = job.eta = None
+            job.finished_at = time.time()
 
     def _remove_files(self, job: Job) -> None:
         shutil.rmtree(self._directory / job.id, ignore_errors=True)
