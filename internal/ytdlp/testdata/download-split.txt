@@ -1,0 +1,14 @@
+VD_META {"title": "Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film", "extractor_key": "Youtube"}
+VD_SIZES [{"filesize": 28207144, "filesize_approx": 28207093}, {"filesize": 30767611, "filesize_approx": 30767602}]
+VD_DL {"status": "downloading", "downloaded_bytes": 1024, "total_bytes": 28207144, "speed": 614708.3578073565, "eta": 45}
+VD_DL {"status": "downloading", "downloaded_bytes": 14177103, "total_bytes": 28207144, "speed": 24356282.88405213, "eta": 0}
+VD_DL {"status": "finished", "downloaded_bytes": 28207144, "total_bytes": 28207144, "speed": 31333017.1785073}
+VD_DL {"status": "downloading", "downloaded_bytes": 1024, "total_bytes": 30767611, "speed": 738728.4650842793, "eta": 41}
+VD_DL {"status": "finished", "downloaded_bytes": 30767611, "total_bytes": 30767611, "speed": 93726210.61825344}
+VD_PP {"status": "started", "postprocessor": "Merger"}
+VD_PP {"status": "finished", "postprocessor": "Merger"}
+VD_PP {"status": "started", "postprocessor": "VideoRemuxer"}
+VD_PP {"status": "finished", "postprocessor": "VideoRemuxer"}
+VD_PP {"status": "started", "postprocessor": "MoveFiles"}
+VD_PP {"status": "finished", "postprocessor": "MoveFiles"}
+VD_FILE "/jobs/abc/Big Buck Bunny 60fps 4K - Official Blender Foundation Short Film.mp4"

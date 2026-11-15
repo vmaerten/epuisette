@@ -1,0 +1,11 @@
+VD_META {"title": "Me at the zoo", "extractor_key": "Youtube"}
+VD_SIZES []
+VD_DL {"status": "downloading", "downloaded_bytes": 1024, "total_bytes": 309288}
+VD_DL {"status": "finished", "downloaded_bytes": 309288, "total_bytes": 309288, "speed": 3767619.4634331935}
+VD_PP {"status": "started", "postprocessor": "FixupM4a"}
+VD_PP {"status": "finished", "postprocessor": "FixupM4a"}
+VD_PP {"status": "started", "postprocessor": "ExtractAudio"}
+VD_PP {"status": "finished", "postprocessor": "ExtractAudio"}
+VD_PP {"status": "started", "postprocessor": "MoveFiles"}
+VD_PP {"status": "finished", "postprocessor": "MoveFiles"}
+VD_FILE "/jobs/abc/Me at the zoo.m4a"
