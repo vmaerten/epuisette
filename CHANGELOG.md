@@ -1,10 +1,19 @@
 # Changelog
 
-## Unreleased
+## 0.2.0
 
 ### ✨ Features
 
 - Open **À propos d'Épuisette** from the app menu or the footer: who makes the app, its version, and links to sponsor it on GitHub, buy its author a coffee, read the code or report a problem. **Soutenir Épuisette…** in the app menu goes straight to GitHub Sponsors. ([#33](https://github.com/vmaerten/epuisette/pull/33))
+
+### 📚 Documentation
+
+- The install instructions run `brew trust vmaerten/tap` first: Homebrew now loads casks from a third-party tap only once it is trusted. ([#31](https://github.com/vmaerten/epuisette/pull/31))
+
+### 🔧 Internal
+
+- The repository page shows a Sponsor button, with GitHub Sponsors and Buy Me a Coffee. ([#32](https://github.com/vmaerten/epuisette/pull/32))
+- Pin the Wails CLI in `.mise.toml`, so `task bindings` works with the pinned Go. ([#34](https://github.com/vmaerten/epuisette/pull/34))
 
 ## 0.1.0
 
