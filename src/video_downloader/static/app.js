@@ -21,6 +21,8 @@ let preview = null;
 const rows = new Map();
 // The API only learns a title once the download starts; this covers the queued state.
 const titles = new Map();
+// Downloads started from this page: each one is saved to the device once, when it finishes.
+const pendingSaves = new Set();
 
 class ApiError extends Error {
   constructor(code) {
@@ -186,6 +188,7 @@ async function startDownload() {
   try {
     const job = await api("POST", "/api/downloads", { url, preset });
     titles.set(job.id, title);
+    pendingSaves.add(job.id);
     preview = null;
     $("preview").hidden = true;
     $("url").value = "";
@@ -294,12 +297,16 @@ function renderJobs(jobs) {
       row = fresh;
     }
     updateRow(row, job);
+    if (job.status === "done" && pendingSaves.delete(job.id)) {
+      row.querySelector("a[download]").click();
+    }
   }
   for (const [id, row] of rows) {
     if (seen.has(id)) continue;
     row.remove();
     rows.delete(id);
     titles.delete(id);
+    pendingSaves.delete(id);
   }
   $("empty").hidden = jobs.length > 0;
 }
@@ -323,6 +330,7 @@ async function onJobAction(event) {
       const { url, preset } = row.dataset;
       const job = await api("POST", "/api/downloads", { url, preset });
       titles.set(job.id, row.querySelector(".job-title").textContent);
+      pendingSaves.add(job.id);
     }
     await api("DELETE", `/api/downloads/${row.dataset.id}`);
   } catch (error) {
