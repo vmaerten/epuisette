@@ -12,3 +12,6 @@ downloads/
 *.m4a
 *.mp3
 *.part
+
+# Wails build output.
+bin/

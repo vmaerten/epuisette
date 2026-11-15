@@ -17,7 +17,8 @@ from video_downloader.jobs import Job, JobStatus, JobStore
 
 logger = logging.getLogger(__name__)
 
-STATIC_DIR = Path(__file__).parent / "static"
+# The page moved to the Wails app's frontend/ and only runs inside it now.
+STATIC_DIR = Path(__file__).resolve().parents[2] / "frontend"
 DOWNLOADS_DIR = Path(os.environ.get("DOWNLOADS_DIR", "downloads"))
 MAX_AGE_DAYS = float(os.environ.get("DOWNLOADS_MAX_AGE_DAYS", "7"))
 PURGE_INTERVAL_SECONDS = 3600
