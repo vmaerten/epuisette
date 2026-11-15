@@ -1,3 +1,4 @@
+import os
 import threading
 import time
 
@@ -22,6 +23,8 @@ class FakeDownloader:
         self.gates = {}
         self.failures = {}
         self.started = []
+        self.filename = "video.mp4"
+        self.escape_to = None
 
     def gate(self, url):
         return self.gates.setdefault(url, threading.Event())
@@ -35,7 +38,7 @@ class FakeDownloader:
                 raise JobCancelled()
         if job.url in self.failures:
             raise self.failures[job.url]
-        file = directory / "video.mp4"
+        file = (self.escape_to or directory) / self.filename
         file.write_bytes(b"abc")
         return file
 
@@ -154,3 +157,69 @@ def test_downloads_api_follows_a_job_from_creation_to_deletion(store, downloader
     missing = client.get(f"/api/downloads/{job_id}")
     assert (missing.status_code, missing.json()["code"]) == (404, "not_found")
     assert client.delete(f"/api/downloads/{job_id}").status_code == 404
+
+
+def test_download_landing_outside_its_directory_is_never_served(store, downloader, tmp_path):
+    downloader.escape_to = tmp_path
+    downloader.gate("a").set()
+
+    job = store.create("a", "best")
+
+    wait_until(lambda: job.status == JobStatus.FAILED)
+    assert job.file is None
+
+
+def test_file_is_served_under_its_own_name(store, downloader, monkeypatch):
+    monkeypatch.setattr(main, "jobs", store)
+    client = TestClient(main.app)
+    downloader.filename = 'Été "live".mp4'
+    job = store.create("a", "best")
+
+    not_ready = client.get(f"/api/downloads/{job.id}/file")
+    assert (not_ready.status_code, not_ready.json()["code"]) == (409, "not_ready")
+
+    downloader.gate("a").set()
+    wait_until(lambda: job.status == JobStatus.DONE)
+    response = client.get(f"/api/downloads/{job.id}/file")
+
+    assert response.status_code == 200
+    assert response.content == b"abc"
+    assert response.headers["content-type"] == "video/mp4"
+    # Percent-encoded: the title cannot break out of the header.
+    assert response.headers["content-disposition"] == (
+        "attachment; filename*=utf-8''%C3%89t%C3%A9%20%22live%22.mp4"
+    )
+
+
+def test_purge_removes_only_finished_jobs_past_the_age_limit(store, downloader, tmp_path):
+    downloader.gate("old").set()
+    old = store.create("old", "best")
+    wait_until(lambda: old.status == JobStatus.DONE)
+    running = store.create("running", "best")
+    wait_until(lambda: (tmp_path / running.id).exists())
+
+    store.purge(max_age=3600, now=time.time() + 1800)
+    assert store.get(old.id) is old
+
+    store.purge(max_age=3600, now=time.time() + 7200)
+    assert store.get(old.id) is None
+    assert not (tmp_path / old.id).exists()
+    assert store.get(running.id) is running
+    assert (tmp_path / running.id).exists()
+
+
+def test_purge_removes_only_stale_directories_that_look_like_jobs(store, tmp_path):
+    week_ago = time.time() - 7 * 86400
+    stale = tmp_path / ("a" * 32)
+    fresh = tmp_path / ("b" * 32)
+    foreign = tmp_path / "holiday-photos"
+    for directory in (stale, fresh, foreign):
+        directory.mkdir()
+    for directory in (stale, foreign):
+        os.utime(directory, (week_ago, week_ago))
+
+    store.purge(max_age=86400)
+
+    assert not stale.exists()
+    assert fresh.exists()
+    assert foreign.exists()
