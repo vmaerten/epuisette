@@ -18,13 +18,13 @@ The app is signed ad hoc, not notarised; the cask removes the quarantine flag so
 
 ## Build from source
 
-You need Go 1.26 or later, the Xcode command line tools, [task](https://taskfile.dev/), the Wails CLI, and the three tools above:
+You need [mise](https://mise.jdx.dev/), the Xcode command line tools and the three tools above. mise installs the versions of Go, [task](https://taskfile.dev/) and the Wails CLI pinned in `.mise.toml`:
 
 ```sh
-brew install go go-task yt-dlp ffmpeg deno
+brew install mise yt-dlp ffmpeg deno
 xcode-select --install
-go install github.com/wailsapp/wails/v3/cmd/wails3@v3.1.0
-task install
+mise install
+mise exec -- task install
 ```
 
 `task install` builds the app, signs it ad hoc and copies it to `~/Applications/Épuisette.app`.
@@ -79,7 +79,7 @@ The `Release` workflow then runs `task release` on a macOS runner:
 
 It needs the `HOMEBREW_TAP_TOKEN` secret: a fine-grained token with `contents: write` on `vmaerten/homebrew-tap` only. An existing release is never overwritten. If the cask push fails after publication, rerun it alone with `task release:tap TAG=v0.1.0`. A prerelease (`v0.2.0-rc.1`) is published from a Mac with `task release TAG=v0.2.0-rc.1` and leaves the cask alone.
 
-`task release:build TAG=vX.Y.Z` builds and checks the archive in `dist/` without publishing anything. Go and Task are pinned in `.mise.toml`, with checksums in `mise.lock`.
+`task release:build TAG=vX.Y.Z` builds and checks the archive in `dist/` without publishing anything. Go, Task and the Wails CLI are pinned in `.mise.toml` and `mise.lock`.
 
 ## From the command line
 
