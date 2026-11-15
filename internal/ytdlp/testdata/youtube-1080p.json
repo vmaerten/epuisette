@@ -1,0 +1,304 @@
+{
+  "_type": "video",
+  "title": "LE MATCH DE LA DÉCÉNIE, FINALE AVANT L'HEURE ?🔥T1 vs BLG",
+  "thumbnail": "https://i.ytimg.com/vi_webp/aEFqPCw39Cg/maxresdefault.webp",
+  "duration": 6443,
+  "uploader": "Skyyart",
+  "extractor_key": "Youtube",
+  "formats": [
+    {
+      "vcodec": "none",
+      "acodec": "none",
+      "width": 48,
+      "height": 27
+    },
+    {
+      "vcodec": "none",
+      "acodec": "none",
+      "width": 79,
+      "height": 45
+    },
+    {
+      "vcodec": "none",
+      "acodec": "none",
+      "width": 159,
+      "height": 90
+    },
+    {
+      "vcodec": "none",
+      "acodec": null,
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": null,
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "mp4a.40.5",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "opus",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "opus",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "mp4a.40.5",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "opus",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "opus",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "mp4a.40.2",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "opus",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "mp4a.40.2",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "none",
+      "acodec": "opus",
+      "width": null,
+      "height": null
+    },
+    {
+      "vcodec": "vp09.00.10.08",
+      "acodec": "none",
+      "width": 256,
+      "height": 144
+    },
+    {
+      "vcodec": "avc1.4D400C",
+      "acodec": "none",
+      "width": 256,
+      "height": 144
+    },
+    {
+      "vcodec": "avc1.4D400C",
+      "acodec": "none",
+      "width": 256,
+      "height": 144
+    },
+    {
+      "vcodec": "vp09.00.11.08",
+      "acodec": "none",
+      "width": 256,
+      "height": 144
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 256,
+      "height": 144
+    },
+    {
+      "vcodec": "av01.0.00M.08",
+      "acodec": "none",
+      "width": 256,
+      "height": 144
+    },
+    {
+      "vcodec": "avc1.4D4015",
+      "acodec": "none",
+      "width": 426,
+      "height": 240
+    },
+    {
+      "vcodec": "avc1.4D4015",
+      "acodec": "none",
+      "width": 426,
+      "height": 240
+    },
+    {
+      "vcodec": "vp09.00.20.08",
+      "acodec": "none",
+      "width": 426,
+      "height": 240
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 426,
+      "height": 240
+    },
+    {
+      "vcodec": "av01.0.00M.08",
+      "acodec": "none",
+      "width": 426,
+      "height": 240
+    },
+    {
+      "vcodec": "avc1.4D401E",
+      "acodec": "none",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "vcodec": "avc1.4D401E",
+      "acodec": "none",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "vcodec": "avc1.42001E",
+      "acodec": "mp4a.40.2",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "vcodec": "vp09.00.21.08",
+      "acodec": "none",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "vcodec": "av01.0.01M.08",
+      "acodec": "none",
+      "width": 640,
+      "height": 360
+    },
+    {
+      "vcodec": "avc1.4D401F",
+      "acodec": "none",
+      "width": 854,
+      "height": 480
+    },
+    {
+      "vcodec": "avc1.4D401F",
+      "acodec": "none",
+      "width": 854,
+      "height": 480
+    },
+    {
+      "vcodec": "vp09.00.30.08",
+      "acodec": "none",
+      "width": 854,
+      "height": 480
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 854,
+      "height": 480
+    },
+    {
+      "vcodec": "av01.0.04M.08",
+      "acodec": "none",
+      "width": 854,
+      "height": 480
+    },
+    {
+      "vcodec": "avc1.4D401F",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "avc1.4D4020",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "avc1.4D4020",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "vp09.00.40.08",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "av01.0.08M.08",
+      "acodec": "none",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "vcodec": "avc1.64002A",
+      "acodec": "none",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "vcodec": "avc1.64002A",
+      "acodec": "none",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "vcodec": "vp09.00.41.08",
+      "acodec": "none",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "vcodec": "vp9",
+      "acodec": "none",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "vcodec": "av01.0.09M.08",
+      "acodec": "none",
+      "width": 1920,
+      "height": 1080
+    }
+  ]
+}

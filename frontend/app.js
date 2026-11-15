@@ -10,8 +10,9 @@ const ERROR_MESSAGES = {
   unavailable: "Cette vidéo est privée, supprimée ou demande une connexion.",
   playlist: "Les playlists ne sont pas prises en charge.",
   extraction_failed: "L'analyse a échoué. yt-dlp est peut-être à mettre à jour.",
+  tool_missing: "yt-dlp est introuvable. Installe-le avec « brew install yt-dlp ».",
 };
-const FALLBACK_ERROR = "Le serveur ne répond pas. Réessaie dans un instant.";
+const FALLBACK_ERROR = "Quelque chose s'est mal passé. Réessaie dans un instant.";
 
 const $ = (id) => document.getElementById(id);
 const decimal = new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 1 });
@@ -43,8 +44,9 @@ async function api(method, path, body) {
   return data;
 }
 
+// Go errors arrive with their JSON form in `cause`; the old HTTP calls set `code`.
 function messageFor(error) {
-  return ERROR_MESSAGES[error.code] ?? FALLBACK_ERROR;
+  return ERROR_MESSAGES[error.cause?.code ?? error.code] ?? FALLBACK_ERROR;
 }
 
 function formatBytes(bytes) {
@@ -107,7 +109,7 @@ async function analyse(event) {
   $("preview").hidden = true;
   setAnalysing(true);
   try {
-    showPreview(url, await api("POST", "/api/info", { url }));
+    showPreview(url, await Service.Info(url));
   } catch (error) {
     setUrlError(messageFor(error));
   } finally {
