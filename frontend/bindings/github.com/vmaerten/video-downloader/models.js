@@ -14,10 +14,18 @@ export class Config {
     constructor($$source = {}) {
         if (!("ytdlpVersion" in $$source)) {
             /**
+             * Empty when yt-dlp is missing or fails to start.
              * @member
              * @type {string}
              */
             this["ytdlpVersion"] = "";
+        }
+        if (!("missingTools" in $$source)) {
+            /**
+             * @member
+             * @type {string[]}
+             */
+            this["missingTools"] = [];
         }
 
         Object.assign(this, $$source);
@@ -29,7 +37,14 @@ export class Config {
      * @returns {Config}
      */
     static createFrom($$source = {}) {
+        const $$createField1_0 = $$createType0;
         let $$parsedSource = typeof $$source === 'string' ? JSON.parse($$source) : $$source;
+        if ("missingTools" in $$parsedSource) {
+            $$parsedSource["missingTools"] = $$createField1_0($$parsedSource["missingTools"]);
+        }
         return new Config(/** @type {Partial<Config>} */($$parsedSource));
     }
 }
+
+// Private type creation functions
+const $$createType0 = $Create.Array($Create.Any);

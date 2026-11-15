@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"errors"
-	"fmt"
-	"os/exec"
-	"strings"
 
 	"github.com/vmaerten/video-downloader/internal/jobs"
 	"github.com/vmaerten/video-downloader/internal/ytdlp"
@@ -18,15 +15,14 @@ type Service struct {
 }
 
 type Config struct {
-	YtdlpVersion string `json:"ytdlpVersion"`
+	// Empty when yt-dlp is missing or fails to start.
+	YtdlpVersion string   `json:"ytdlpVersion"`
+	MissingTools []string `json:"missingTools"`
 }
 
-func (s *Service) Config(ctx context.Context) (Config, error) {
-	out, err := exec.CommandContext(ctx, "yt-dlp", "--version").Output()
-	if err != nil {
-		return Config{}, fmt.Errorf("read the yt-dlp version: %w", err)
-	}
-	return Config{YtdlpVersion: strings.TrimSpace(string(out))}, nil
+func (s *Service) Config(ctx context.Context) Config {
+	version, _ := ytdlp.Version(ctx)
+	return Config{YtdlpVersion: version, MissingTools: ytdlp.MissingTools()}
 }
 
 func (s *Service) Info(ctx context.Context, url string) (ytdlp.VideoInfo, error) {

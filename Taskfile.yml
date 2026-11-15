@@ -39,6 +39,15 @@ tasks:
       - codesign --force --deep --sign - "{{.APP}}"
       - codesign --verify --deep --strict "{{.APP}}"
 
+  install:
+    desc: Package the app and copy it to ~/Applications
+    deps: [package]
+    cmds:
+      - mkdir -p ~/Applications
+      - rm -rf ~/Applications/{{.APP_NAME}}.app
+      # ditto keeps the signature and extended attributes intact.
+      - ditto "{{.APP}}" ~/Applications/{{.APP_NAME}}.app
+
   test:
     desc: Run the Go tests
     cmds:
