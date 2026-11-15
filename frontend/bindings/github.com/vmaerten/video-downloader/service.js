@@ -13,6 +13,10 @@ import { Call as $Call, CancellablePromise as $CancellablePromise, Create as $Cr
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore: Unused imports
+import * as ytdlp$0 from "./internal/ytdlp/models.js";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore: Unused imports
 import * as $models from "./models.js";
 
 /**
@@ -24,5 +28,16 @@ export function Config() {
     }));
 }
 
+/**
+ * @param {string} url
+ * @returns {$CancellablePromise<ytdlp$0.VideoInfo>}
+ */
+export function Info(url) {
+    return $Call.ByID(1603961877, url).then(/** @type {($result: any) => any} */(($result) => {
+        return $$createType1($result);
+    }));
+}
+
 // Private type creation functions
 const $$createType0 = $models.Config.createFrom;
+const $$createType1 = ytdlp$0.VideoInfo.createFrom;
