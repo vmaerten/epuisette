@@ -57,7 +57,7 @@ body {
   flex-direction: column;
   background: var(--ground);
   color: var(--ink);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.4;
 }
@@ -71,7 +71,6 @@ p {
 h1,
 .downloads h2,
 .wordmark {
-  font-family: "Space Grotesk", Inter, system-ui, sans-serif;
   font-weight: 600;
 }
 

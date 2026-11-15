@@ -1,4 +1,4 @@
-"use strict";
+import { Service } from "./bindings/github.com/vmaerten/video-downloader/index.js";
 
 const POLL_INTERVAL_MS = 1000;
 const SVG_NS = "http://www.w3.org/2000/svg";
@@ -346,10 +346,8 @@ async function onJobAction(event) {
 
 async function loadFooter() {
   try {
-    const { ytdlp_version: version, max_age_days: days } = await api("GET", "/api/config");
-    const unit = days >= 2 ? "jours" : "jour";
-    $("footer").textContent =
-      `yt-dlp ${version} · fichiers supprimés après ${decimal.format(days)} ${unit}`;
+    const { ytdlpVersion } = await Service.Config();
+    $("footer").textContent = `yt-dlp ${ytdlpVersion}`;
   } catch {
     // The footer is informative only: without it the page works the same.
   }
