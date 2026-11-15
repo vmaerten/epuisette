@@ -1,39 +1,36 @@
 # video-downloader
 
-Personal web app to download videos with [yt-dlp](https://github.com/yt-dlp/yt-dlp): paste a URL, pick a format, get the file. The interface is in French.
+macOS app to download videos with [yt-dlp](https://github.com/yt-dlp/yt-dlp): paste a link, pick a format, and the file lands in your Downloads folder. The interface is in French.
 
-It is meant for one person on their own machine. There is no authentication, so it listens on localhost only: do not expose it to the internet.
+It runs only while its window is open, starts no server and opens no network port. It is built with [Wails](https://wails.io) v3: a Go binary that shows the page in the system's WebKit.
 
 ## Requirements
 
-- [uv](https://docs.astral.sh/uv/), which installs Python 3.13 and the dependencies.
+- [yt-dlp](https://github.com/yt-dlp/yt-dlp), which the app runs for every analysis and download.
 - [ffmpeg](https://ffmpeg.org/), to merge the video and audio streams and to convert audio.
-- [deno](https://deno.com/), the JavaScript runtime yt-dlp looks for by default to read YouTube's player.
-- [task](https://taskfile.dev/), optional, for the shortcuts below.
-
-On macOS: `brew install uv ffmpeg deno go-task`.
-
-## Run
+- [deno](https://deno.com/), the JavaScript runtime yt-dlp uses to read YouTube's player.
 
 ```sh
-uv sync
-task dev
+brew install yt-dlp ffmpeg deno
 ```
 
-Then open http://127.0.0.1:8787. Without `task`:
+The app looks for them in the Homebrew folders and shows a banner at startup if one is missing.
+
+To build it you also need Go 1.26 or later, the Xcode command line tools, [task](https://taskfile.dev/) and the Wails CLI:
 
 ```sh
-uv run uvicorn video_downloader.main:app --port 8787
+brew install go go-task
+xcode-select --install
+go install github.com/wailsapp/wails/v3/cmd/wails3@v3.1.0
 ```
 
-## Configuration
+## Install
 
-| Variable | Default | Meaning |
-|---|---|---|
-| `DOWNLOADS_DIR` | `./downloads` | Where files are written, one sub-directory per download. |
-| `DOWNLOADS_MAX_AGE_DAYS` | `7` | Finished downloads older than this are deleted, at startup and every hour. |
+```sh
+task install
+```
 
-Only sub-directories named like a download id are ever deleted, so `DOWNLOADS_DIR` can point at a folder that holds other things.
+This builds the app, signs it ad hoc and copies it to `~/Applications/video-downloader.app`. The first download may make macOS ask for access to the Downloads folder.
 
 ## Formats
 
@@ -47,21 +44,28 @@ Playlists are not supported.
 
 ## Limits
 
-- Downloads are tracked in memory. After a restart the list is empty; the files stay in `DOWNLOADS_DIR` until they expire.
 - Two downloads run at a time, the others wait.
-- Sites change often. When a link that used to work fails, update yt-dlp first: `uv lock --upgrade-package yt-dlp && uv sync`.
+- The list lives in memory: it is empty again after a restart, and the files stay in the Downloads folder. Quitting the app cancels the downloads still running.
+- A file never overwrites another: a second download with the same name gets " (1)" added.
+- Sites change often. When a link that used to work fails, update yt-dlp first: `brew upgrade yt-dlp`.
 
 ## Development
 
 ```sh
-task lint   # ruff check and format check
-task fmt    # fix and format
-task test   # pytest
+task dev        # build and open the app from the sources
+task test       # go test
+task lint       # gofmt and go vet
+task bindings   # regenerate frontend/bindings after changing a Service method
+task package    # build bin/video-downloader.app
 ```
+
+The page in `frontend/` is plain HTML, CSS and JavaScript, with no npm and no build step. It calls the Go methods of `Service` through the generated `frontend/bindings`, which are committed.
+
+`internal/ytdlp` runs yt-dlp; `VD_LIVE=1 go test ./internal/ytdlp -run Live` checks it against YouTube. `internal/jobs` queues the downloads.
 
 ## From the command line
 
-There is no custom CLI: yt-dlp is the CLI. Install it with `brew install yt-dlp`, then these aliases give the same results as the app's presets:
+There is no custom CLI: yt-dlp is the CLI. These aliases give the same results as the app's presets:
 
 ```sh
 # 1080p H.264 MP4, like the app's "1080p" preset. Replace 1080 with 720, or drop ":1080" for the best quality.
