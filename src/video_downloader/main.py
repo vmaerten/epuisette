@@ -5,7 +5,8 @@ from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from video_downloader.info import InfoError, VideoInfo, fetch_info
+from video_downloader.errors import ApiError
+from video_downloader.info import VideoInfo, fetch_info
 
 STATIC_DIR = Path(__file__).parent / "static"
 
@@ -16,8 +17,8 @@ class InfoRequest(BaseModel):
     url: str
 
 
-@app.exception_handler(InfoError)
-def handle_info_error(_: Request, error: InfoError) -> JSONResponse:
+@app.exception_handler(ApiError)
+def handle_api_error(_: Request, error: ApiError) -> JSONResponse:
     return JSONResponse(
         status_code=error.status,
         content={"code": error.code, "message": error.message},

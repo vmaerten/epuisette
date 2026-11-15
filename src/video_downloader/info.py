@@ -4,6 +4,8 @@ import yt_dlp
 from pydantic import BaseModel
 from yt_dlp.utils import DownloadError, ExtractorError, UnsupportedError
 
+from video_downloader.errors import ApiError
+
 YDL_OPTS = {
     "quiet": True,
     "no_warnings": True,
@@ -28,14 +30,6 @@ class VideoInfo(BaseModel):
     uploader: str | None
     extractor: str | None
     presets: list[Preset]
-
-
-class InfoError(Exception):
-    def __init__(self, status: int, code: str, message: str):
-        super().__init__(message)
-        self.status = status
-        self.code = code
-        self.message = message
 
 
 def _resolution(fmt: dict[str, Any]) -> int | None:
@@ -66,29 +60,29 @@ def build_presets(formats: list[dict[str, Any]]) -> list[Preset]:
     return presets
 
 
-def _to_info_error(error: DownloadError) -> InfoError:
+def to_api_error(error: DownloadError) -> ApiError:
     # exc_info holds the extractor's own error, or the network error it wrapped.
     cause = error.exc_info[1] if error.exc_info else None
     if isinstance(cause, UnsupportedError):
-        return InfoError(422, "unsupported_url", "No video found at this address")
+        return ApiError(422, "unsupported_url", "No video found at this address")
     if isinstance(cause, ExtractorError) and cause.expected:
-        return InfoError(404, "unavailable", cause.orig_msg)
-    return InfoError(502, "extraction_failed", str(error).removeprefix("ERROR: "))
+        return ApiError(404, "unavailable", cause.orig_msg)
+    return ApiError(502, "extraction_failed", str(error).removeprefix("ERROR: "))
 
 
 def fetch_info(url: str) -> VideoInfo:
     # yt-dlp also accepts search prefixes and bare words; only real links are allowed here.
     if not url.startswith(("http://", "https://")):
-        raise InfoError(422, "unsupported_url", "Not a web address")
+        raise ApiError(422, "unsupported_url", "Not a web address")
 
     try:
         with yt_dlp.YoutubeDL(YDL_OPTS) as ydl:
             info = ydl.extract_info(url, download=False)
     except DownloadError as error:
-        raise _to_info_error(error) from error
+        raise to_api_error(error) from error
 
     if info.get("_type") == "playlist":
-        raise InfoError(422, "playlist", "Playlists are not supported")
+        raise ApiError(422, "playlist", "Playlists are not supported")
 
     return VideoInfo(
         title=info.get("title"),
