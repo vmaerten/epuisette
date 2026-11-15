@@ -1,0 +1,33 @@
+[project]
+name = "video-downloader"
+version = "0.1.0"
+description = "Personal web app to download videos with yt-dlp"
+authors = [
+    { name = "Valentin Maerten", email = "maerten.valentin@gmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.163.1",
+    "uvicorn>=0.54.0",
+    "yt-dlp[default]>=2026.10.26",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "httpx2>=2.16.0",
+    "pytest>=9.2.0",
+    "ruff>=0.17.5",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

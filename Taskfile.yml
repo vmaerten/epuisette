@@ -1,0 +1,24 @@
+version: '3'
+
+tasks:
+  dev:
+    desc: Run the server on localhost with auto-reload
+    cmds:
+      - uv run uvicorn video_downloader.main:app --reload --port 8787
+
+  lint:
+    desc: Check lint rules and formatting
+    cmds:
+      - uv run ruff check
+      - uv run ruff format --check
+
+  fmt:
+    desc: Fix lint issues and format the code
+    cmds:
+      - uv run ruff check --fix
+      - uv run ruff format
+
+  test:
+    desc: Run the tests
+    cmds:
+      - uv run pytest {{.CLI_ARGS}}
