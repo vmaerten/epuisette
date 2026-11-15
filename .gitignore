@@ -11,3 +11,6 @@ downloads/
 
 # Wails build output.
 bin/
+
+# Release archives.
+dist/
