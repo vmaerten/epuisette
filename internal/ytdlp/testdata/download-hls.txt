@@ -1,0 +1,11 @@
+VD_META {"title": "Captain America - @King0fNerd Are you sure you made the right choice? Find out in theat...", "extractor_key": "Twitter"}
+VD_SIZES []
+VD_DL {"status": "downloading", "downloaded_bytes": 1024, "total_bytes_estimate": 553284.0, "speed": 0}
+VD_DL {"status": "finished", "downloaded_bytes": 553284, "total_bytes": 553284, "speed": 10832981.487890953}
+VD_PP {"status": "started", "postprocessor": "FixupM3u8"}
+VD_PP {"status": "finished", "postprocessor": "FixupM3u8"}
+VD_PP {"status": "started", "postprocessor": "VideoRemuxer"}
+VD_PP {"status": "finished", "postprocessor": "VideoRemuxer"}
+VD_PP {"status": "started", "postprocessor": "MoveFiles"}
+VD_PP {"status": "finished", "postprocessor": "MoveFiles"}
+VD_FILE "/jobs/abc/Captain America - @King0fNerd Are you sure you made the right choice\uff1f Find out in theat....mp4"
