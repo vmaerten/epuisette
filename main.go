@@ -25,7 +25,7 @@ func main() {
 	}
 
 	app := application.New(application.Options{
-		Name:     "video-downloader",
+		Name:     "Épuisette",
 		Services: []application.Service{application.NewService(&Service{jobs: store})},
 		Assets: application.AssetOptions{
 			// Unlike AssetFileServerFS, this also serves /wails/runtime.js,
@@ -38,7 +38,7 @@ func main() {
 	})
 
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
-		Title:  "video-downloader",
+		Title:  "Épuisette",
 		Width:  960,
 		Height: 820,
 		URL:    "/",
@@ -60,7 +60,7 @@ func newStore() (*jobs.Store, error) {
 		return nil, err
 	}
 	return jobs.New(
-		filepath.Join(cache, "fr.vmaerten.video-downloader", "jobs"),
+		filepath.Join(cache, "fr.vmaerten.epuisette", "jobs"),
 		filepath.Join(home, "Downloads"),
 		ytdlp.Download,
 	)

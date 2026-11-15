@@ -1,4 +1,4 @@
-# video-downloader
+# Épuisette
 
 macOS app to download videos with [yt-dlp](https://github.com/yt-dlp/yt-dlp): paste a link, pick a format, and the file lands in your Downloads folder. The interface is in French.
 
@@ -30,7 +30,7 @@ go install github.com/wailsapp/wails/v3/cmd/wails3@v3.1.0
 task install
 ```
 
-This builds the app, signs it ad hoc and copies it to `~/Applications/video-downloader.app`. The first download may make macOS ask for access to the Downloads folder.
+This builds the app, signs it ad hoc and copies it to `~/Applications/Épuisette.app`. The first download may make macOS ask for access to the Downloads folder.
 
 ## Formats
 
@@ -56,7 +56,7 @@ task dev        # build and open the app from the sources
 task test       # go test
 task lint       # gofmt and go vet
 task bindings   # regenerate frontend/bindings after changing a Service method
-task package    # build bin/video-downloader.app
+task package    # build bin/Épuisette.app
 ```
 
 The page in `frontend/` is plain HTML, CSS and JavaScript, with no npm and no build step. It calls the Go methods of `Service` through the generated `frontend/bindings`, which are committed.

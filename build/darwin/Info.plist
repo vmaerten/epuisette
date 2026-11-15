@@ -5,11 +5,13 @@
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleName</key>
-    <string>video-downloader</string>
+    <string>Épuisette</string>
+    <key>CFBundleDisplayName</key>
+    <string>Épuisette</string>
     <key>CFBundleExecutable</key>
-    <string>video-downloader</string>
+    <string>epuisette</string>
     <key>CFBundleIdentifier</key>
-    <string>fr.vmaerten.video-downloader</string>
+    <string>fr.vmaerten.epuisette</string>
     <key>CFBundleVersion</key>
     <string>0.1.0</string>
     <key>CFBundleShortVersionString</key>

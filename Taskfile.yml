@@ -1,9 +1,10 @@
 version: '3'
 
 vars:
-  APP_NAME: video-downloader
+  APP_NAME: epuisette
   BIN_DIR: bin
-  APP: '{{.BIN_DIR}}/{{.APP_NAME}}.app'
+  BUNDLE: Épuisette.app
+  APP: '{{.BIN_DIR}}/{{.BUNDLE}}'
 
 tasks:
   dev:
@@ -44,9 +45,9 @@ tasks:
     deps: [package]
     cmds:
       - mkdir -p ~/Applications
-      - rm -rf ~/Applications/{{.APP_NAME}}.app
+      - rm -rf ~/Applications/{{.BUNDLE}}
       # ditto keeps the signature and extended attributes intact.
-      - ditto "{{.APP}}" ~/Applications/{{.APP_NAME}}.app
+      - ditto "{{.APP}}" ~/Applications/{{.BUNDLE}}
 
   test:
     desc: Run the Go tests
