@@ -131,6 +131,9 @@ def test_downloads_api_follows_a_job_from_creation_to_deletion(store, downloader
     rejected = client.post("/api/downloads", json={"url": "ytsearch:cats", "preset": "best"})
     assert (rejected.status_code, rejected.json()["code"]) == (422, "unsupported_url")
 
+    unknown = client.post("/api/downloads", json={"url": "https://example.com/v", "preset": "hd"})
+    assert (unknown.status_code, unknown.json()["code"]) == (422, "invalid_preset")
+
     created = client.post("/api/downloads", json={"url": "https://example.com/v", "preset": "720p"})
     assert created.status_code == 202
     job_id = created.json()["id"]

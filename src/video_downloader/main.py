@@ -3,7 +3,6 @@ import logging
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
-from typing import Literal
 
 import yt_dlp.version
 from fastapi import FastAPI, Request, Response
@@ -13,7 +12,7 @@ from pydantic import BaseModel, ConfigDict
 
 from video_downloader.downloader import download
 from video_downloader.errors import ApiError
-from video_downloader.info import VideoInfo, fetch_info, require_web_url
+from video_downloader.info import VideoInfo, fetch_info, require_preset, require_web_url
 from video_downloader.jobs import Job, JobStatus, JobStore
 
 logger = logging.getLogger(__name__)
@@ -59,7 +58,7 @@ class InfoRequest(BaseModel):
 
 class DownloadRequest(BaseModel):
     url: str
-    preset: Literal["best", "1080p", "720p", "audio"]
+    preset: str
 
 
 class JobView(BaseModel):
@@ -112,6 +111,7 @@ def info(request: InfoRequest) -> VideoInfo:
 @app.post("/api/downloads", status_code=202)
 def create_download(request: DownloadRequest) -> JobView:
     require_web_url(request.url)
+    require_preset(request.preset)
     return JobView.model_validate(jobs.create(request.url, request.preset))
 
 

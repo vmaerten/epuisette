@@ -40,7 +40,7 @@ Only sub-directories named like a download id are ever deleted, so `DOWNLOADS_DI
 | Preset | Result |
 |---|---|
 | Best quality | Highest resolution, in an MP4. Above 1080p on YouTube this is VP9 or AV1, which some players such as QuickTime refuse. |
-| 1080p, 720p | Best stream up to that resolution, H.264 and AAC in an MP4 when the site offers them. |
+| 1440p down to 360p | The resolutions the video really has, one per step. H.264 and AAC in an MP4 when the site offers them. |
 | Audio only | AAC in an M4A. |
 
 Playlists are not supported.
