@@ -9,8 +9,11 @@ It runs only while its window is open, starts no server and opens no network por
 On a Mac with Apple Silicon and macOS 12 or later:
 
 ```sh
+brew trust vmaerten/tap
 brew install --cask vmaerten/tap/epuisette
 ```
+
+Homebrew loads casks from a third-party tap only once you trust it, hence the first line.
 
 This also installs what the app runs: [yt-dlp](https://github.com/yt-dlp/yt-dlp), [ffmpeg](https://ffmpeg.org/) to merge and convert, and [deno](https://deno.com/), which yt-dlp uses to read YouTube's player. The app looks for them in the Homebrew folders and shows a banner at startup if one is missing.
 
