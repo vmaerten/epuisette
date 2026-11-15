@@ -15,14 +15,15 @@ type Service struct {
 }
 
 type Config struct {
+	Version string `json:"version"`
 	// Empty when yt-dlp is missing or fails to start.
 	YtdlpVersion string   `json:"ytdlpVersion"`
 	MissingTools []string `json:"missingTools"`
 }
 
 func (s *Service) Config(ctx context.Context) Config {
-	version, _ := ytdlp.Version(ctx)
-	return Config{YtdlpVersion: version, MissingTools: ytdlp.MissingTools()}
+	ytdlpVersion, _ := ytdlp.Version(ctx)
+	return Config{Version: version, YtdlpVersion: ytdlpVersion, MissingTools: ytdlp.MissingTools()}
 }
 
 func (s *Service) Info(ctx context.Context, url string) (ytdlp.VideoInfo, error) {
@@ -55,6 +56,15 @@ func (s *Service) RevealDownload(id string) error {
 		return errors.New("this download has no file")
 	}
 	return application.Get().Env.OpenFileManager(job.File, true)
+}
+
+func (s *Service) ShowAbout() {
+	showAbout()
+}
+
+// OpenLink opens one of the app's known links, such as "sponsors", in the browser.
+func (s *Service) OpenLink(name string) error {
+	return openLink(name)
 }
 
 // ServiceShutdown stops the downloads still running when the app quits.

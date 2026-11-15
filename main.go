@@ -37,6 +37,8 @@ func main() {
 		},
 	})
 
+	app.Menu.Set(applicationMenu())
+
 	app.Window.NewWithOptions(application.WebviewWindowOptions{
 		Title:  "Épuisette",
 		Width:  960,
